@@ -1,41 +1,42 @@
-name: Deploy FastAPI with MLflow
+name: Deploy Model and Test API
 
 on:
   push:
     branches:
-      - main  # Trigger deployment on pushes to the main branch
-  pull_request:
-    branches:
-      - main  # Trigger deployment on pull requests to the main branch
+      - main
 
 jobs:
-  deploy:
+  deploy_and_test:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout the code
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    # Step 2: Set up Python
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.9  # Specify the Python version
+      # Step 2: Set up Python
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
 
-    # Step 3: Install dependencies
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install fastapi uvicorn transformers mlflow torch
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
-    # Step 4: Run the FastAPI application
-    - name: Start FastAPI server
-      run: |
-        nohup uvicorn deploy:app --host 0.0.0.0 --port 8000 &
-      
-    # Step 5: Test the endpoint
-    - name: Test FastAPI endpoint
-      run: |
-        curl -X POST "http://127.0.0.1:8000/chat/" -H "Content-Type: application/json" -d '{"message": "Hello, how are you?"}'
+      # Step 4: Start the server in the background (example with FastAPI)
+      - name: Start the server
+        run: |
+          nohup uvicorn app.main:app --host 0.0.0.0 --port 8000 &
 
+      # Step 5: Wait for the server to start (Optional, adjust timeout as needed)
+      - name: Wait for the server to be available
+        run: |
+          sleep 10  # Adjust this based on how long your server takes to start
+
+      # Step 6: Run the curl request
+      - name: Test the API
+        run: |
+          curl -X POST "http://127.0.0.1:8000/chat/" -H "Content-Type: application/json" -d '{"message": "Hello, how are you?"}'
