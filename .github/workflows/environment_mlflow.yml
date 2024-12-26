@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt  # Ensure this path is correct
+          pip install -r requirementss.txt  # Ensure this path is correct
 
       # Step 4: Start the server in the background (example with FastAPI)
       - name: Start the server
