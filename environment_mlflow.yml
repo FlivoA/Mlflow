@@ -1,0 +1,17 @@
+
+name: chatbot_mlflow_env
+channels:
+  - defaults
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+      - fastapi
+      - uvicorn
+      - transformers
+      - torch
+      - mlflow
+      - scikit-learn
+      - requests
+      - pytorch-lightning
+      - git+https://github.com/<username>/<repository_name>.git  # Replace with your GitHub repo URL

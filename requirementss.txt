@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+transformers
+torch
+mlflow
+scikit-learn
+pytorch-lightning
+requests
