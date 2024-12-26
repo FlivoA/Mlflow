@@ -1,17 +1,41 @@
+name: Deploy FastAPI with MLflow
 
-name: chatbot_mlflow_env
-channels:
-  - defaults
-dependencies:
-  - python=3.8
-  - pip
-  - pip:
-      - fastapi
-      - uvicorn
-      - transformers
-      - torch
-      - mlflow
-      - scikit-learn
-      - requests
-      - pytorch-lightning
-      - git+https://github.com/FlivoA/Mlflow.git  # Replace with your GitHub repo URL
+on:
+  push:
+    branches:
+      - main  # Trigger deployment on pushes to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger deployment on pull requests to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Python
+    - name: Set up Python environment
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.9  # Change to the version used in your project
+
+    # Step 3: Install dependencies
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install fastapi uvicorn transformers mlflow torch
+
+    # Step 4: Start FastAPI server
+    - name: Start FastAPI server
+      run: |
+        nohup uvicorn deploy:app --host 0.0.0.0 --port 8000 &
+
+    # Step 5: Test the FastAPI endpoint
+    - name: Test FastAPI endpoint
+      run: |
+        sleep 10  # Allow time for the server to start
+        curl -X POST "http://127.0.0.1:8000/chat/" -H "Content-Type: application/json" -d '{"message": "Hello, how are you?"}'
