@@ -14,4 +14,4 @@ dependencies:
       - scikit-learn
       - requests
       - pytorch-lightning
-      - git+https://github.com/<username>/<repository_name>.git  # Replace with your GitHub repo URL
+      - git+https://github.com/FlivoA/Mlflow.git  # Replace with your GitHub repo URL
